@@ -1,0 +1,18 @@
+meta {
+  name: 3. Add Document
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/api/documents
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "collection": "knowledge_base",
+      "text": "Luminiqa, es una tienda de ropa en linea fundada por Lili Granados y Manu Galindo, está ubicada en Popayán y su mercado es la moda femenina."
+  }
+}

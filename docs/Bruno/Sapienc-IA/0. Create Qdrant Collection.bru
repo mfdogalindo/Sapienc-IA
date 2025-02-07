@@ -1,0 +1,20 @@
+meta {
+  name: 0. Create Qdrant Collection
+  type: http
+  seq: 1
+}
+
+put {
+  url: http://localhost:6333/collections/knowledge_base
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "vectors": {
+      "size": 5120,
+      "distance": "Cosine"
+    }
+  }
+}

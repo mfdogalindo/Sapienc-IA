@@ -1,0 +1,18 @@
+meta {
+  name: 4. Query
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/query
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "collection": "knowledge_base",
+      "question": "¿Qué es Luminiqa?"
+    }
+}

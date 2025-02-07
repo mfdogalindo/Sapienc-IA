@@ -1,0 +1,21 @@
+{
+   "name": "sapienc-ia",
+   "private": true,
+   "scripts": {
+      "build": "turbo run build",
+      "dev": "turbo run dev",
+      "dev:web": "turbo run dev --filter=web...",
+      "dev:desktop": "turbo run dev --filter=desktop...",
+      "dev:ai": "turbo run dev --filter=@sapienc-ia/ai",
+      "infra:up": "turbo run dev --filter=@sapienc-ia/infra",
+      "infra:down": "turbo run down --filter=@sapienc-ia/infra",
+      "dev:full": "concurrently \"pnpm infra:up\" \"pnpm dev\"",
+      "format": "prettier --write \"**/*.{ts,tsx,md}\""
+   },
+   "packageManager": "pnpm@10.2.1",
+   "devDependencies": {
+      "concurrently": "^9.1.2",
+      "prettier": "^3.4.2",
+      "turbo": "^2.4.0"
+   }
+}

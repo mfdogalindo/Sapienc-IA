@@ -1,0 +1,18 @@
+meta {
+  name: 2. Set Model
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/model
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "modelName":"llama3:latest",
+    "collection": "knowledge_base"
+  }
+}

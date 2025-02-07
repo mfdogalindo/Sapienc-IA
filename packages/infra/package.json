@@ -1,0 +1,9 @@
+{
+   "name": "@sapienc-ia/infra",
+   "version": "0.0.1",
+   "scripts": {
+     "dev": "docker-compose -f ../../docker/qdrant/docker-compose.yml up",
+     "down": "docker-compose -f ../../docker/qdrant/docker-compose.yml down",
+     "build": "echo 'No build required'"
+   }
+ }
