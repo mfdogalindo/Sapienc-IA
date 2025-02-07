@@ -1,4 +1,5 @@
-import { ModelConfig, DEFAULT_MODEL } from '../config/models';
+// apps/ai/src/services/ai/ollama.ts
+import { ModelConfig, DEFAULT_MODEL } from '../../config/models';
 
 interface OllamaModel {
   name: string;
@@ -112,4 +113,49 @@ export class OllamaService {
   setModel(model: ModelConfig) {
     this.currentModel = model;
   }
+
+  async *generateCompletionStream(prompt: string, context?: string): AsyncGenerator<string> {
+   const response = await fetch(`${this.baseUrl}/api/generate`, {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({
+       model: this.currentModel.name,
+       prompt: context ? `Context: ${context}\n\nQuestion: ${prompt}` : prompt,
+       stream: true
+     })
+   });
+
+   if (!response.body) {
+     throw new Error('No response body received');
+   }
+
+   const reader = response.body.getReader();
+   const decoder = new TextDecoder();
+
+   try {
+     while (true) {
+       const { done, value } = await reader.read();
+       if (done) break;
+       
+       const chunk = decoder.decode(value);
+       const lines = chunk.split('\n');
+       
+       for (const line of lines) {
+         if (line.trim() === '') continue;
+         
+         try {
+           const data = JSON.parse(line);
+           if (data.response) {
+             yield data.response;
+           }
+         } catch (e) {
+           console.error('Error parsing JSON:', e);
+         }
+       }
+     }
+   } finally {
+     reader.releaseLock();
+   }
+ }
+
 }

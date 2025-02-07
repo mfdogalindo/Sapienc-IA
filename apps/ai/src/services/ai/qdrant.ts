@@ -1,6 +1,6 @@
-// packages/api/src/services/qdrant.ts
+// apps/ai/src/services/ai/qdrant.ts
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { ModelConfig, DEFAULT_MODEL } from '../config/models';
+import { ModelConfig, DEFAULT_MODEL } from '../../config/models';
 
 export class QdrantService {
   private client: QdrantClient;

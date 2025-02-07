@@ -1,7 +1,7 @@
-// packages/api/src/services/rag.ts
+// apps/ai/src/services/ai/rag.ts
 import { OllamaService } from './ollama';
 import { QdrantService } from './qdrant';
-import { ModelConfig, DEFAULT_MODEL } from '../config/models';
+import { ModelConfig, DEFAULT_MODEL } from '../../config/models';
 import { v4 as uuidv4 } from 'uuid';
 
 export class RAGService {
@@ -47,4 +47,20 @@ export class RAGService {
     this.qdrant.initializeCollection(collectionName)
     this.ollama.setModel(model);
   }
+
+  async *queryStream(collectionName: string, question: string): AsyncGenerator<string> {
+   // Generate embedding for the question
+   const questionEmbedding = await this.ollama.generateEmbedding(question);
+   
+   // Search similar documents
+   const similarDocs = await this.qdrant.search(collectionName, questionEmbedding);
+   
+   // Prepare context from similar documents
+   const context = similarDocs.map(doc => doc.text).join('\n\n');
+   
+   // Generate streaming answer using the context
+   for await (const chunk of this.ollama.generateCompletionStream(question, context)) {
+     yield chunk;
+   }
+ }
 }

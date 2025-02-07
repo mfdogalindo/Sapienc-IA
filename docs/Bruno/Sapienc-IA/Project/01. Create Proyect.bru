@@ -1,0 +1,18 @@
+meta {
+  name: 01. Create Proyect
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/projects
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+        "name": "Mi Proyecto de IA",
+        "description": "Proyecto para análisis de documentos"
+  }
+}

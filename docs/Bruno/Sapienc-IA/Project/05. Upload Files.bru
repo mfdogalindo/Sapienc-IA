@@ -1,0 +1,19 @@
+meta {
+  name: 05. Upload Files
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/projects/:projectId/files
+  body: multipartForm
+  auth: none
+}
+
+params:path {
+  projectId: 3a0da80a-11d8-4c65-8790-09c66e8faf9a
+}
+
+body:multipart-form {
+  file: @file(C:\Users\Manuel\Downloads\luminiqa.txt) @contentType(text/plain)
+}
