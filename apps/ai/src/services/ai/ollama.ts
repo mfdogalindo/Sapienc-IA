@@ -1,5 +1,5 @@
 // apps/ai/src/services/ai/ollama.ts
-import { ModelConfig, DEFAULT_MODEL } from '../../config/models';
+import { ModelConfig, DEFAULT_MODEL } from '../../models/models';
 
 interface OllamaModel {
   name: string;
@@ -159,3 +159,6 @@ export class OllamaService {
  }
 
 }
+
+// export singleton instance of OllamaService
+export const ollamaService = new OllamaService();

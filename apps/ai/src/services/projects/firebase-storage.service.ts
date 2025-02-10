@@ -1,25 +1,12 @@
 // apps/ai/src/services/firebase-storage.ts
 import { storage, db, auth } from '../../config/firebase-config';
-import { getFirebaseAdminAuth } from '../../config/firebase-admin.config';
+import { Project, FileMetadata, FileUpload } from '../../models';
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { ref as dbRef, set, get } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';
-import { signInWithCustomToken } from 'firebase/auth';
 
 export class FirebaseStorageService {
 
-  constructor(){
-    this.login();
-  } 
-
-  async login(){
-      const authAdmin = getFirebaseAdminAuth();
-      const token = await authAdmin.createCustomToken('storage-user', { authorized: true });
-      // Sign in with custom token
-      signInWithCustomToken(auth, token).then((userCredential) => {
-        console.log('Signed in with custom token: ', userCredential.user.uid);
-      })
-  }
 
   async createProject(input: Project): Promise<Project> {
     const projectId = uuidv4();

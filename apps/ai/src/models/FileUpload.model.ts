@@ -1,3 +1,3 @@
-interface FileUpload {
+export interface FileUpload {
    filename: string, originalname: string, buffer: Buffer, mimetype: string
 }

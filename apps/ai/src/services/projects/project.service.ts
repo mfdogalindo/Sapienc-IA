@@ -1,4 +1,7 @@
-import { FirebaseStorageService } from "./firebase-client";
+import { FileMetadata, FileUpload, Project } from "../../models";
+import { FirebaseStorageService } from "./firebase-storage.service";
+import { FirebaseCoordinator } from "./firebase-coordinator";
+import { EventEmitter } from "stream";
 
 export class ProjectService {
    private firebaseSS : FirebaseStorageService;
@@ -39,3 +42,6 @@ export class ProjectService {
       return await this.firebaseSS.getProjectFiles(projectId);
    }
 }
+
+// exports singleton instance of ProjectService
+export const projectService = new ProjectService();

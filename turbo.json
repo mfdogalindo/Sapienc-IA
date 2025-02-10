@@ -2,24 +2,23 @@
    "$schema": "https://turbo.build/schema.json",
    "globalDependencies": [".env"],
    "tasks": {
-     "build": {
-       "dependsOn": ["^build"],
-       "outputs": ["dist/**", ".next/**", "build/**"]
-     },
-     "lint": {},
-     "dev": {
-       "cache": false,
-       "persistent": true,
-       "dependsOn": ["^build"]
-     },
-     "infra#dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "ai#dev": {
-      "cache": false,
-      "persistent": true
-    }
+      "build": {
+         "dependsOn": ["^build"],
+         "outputs": ["dist/**", ".next/**", "build/**"]
+      },
+      "lint": {},
+      "dev": {
+         "cache": false,
+         "persistent": true,
+         "dependsOn": ["^build"]
+      },
+      "infra#dev": {
+         "cache": false,
+         "persistent": true
+      },
+      "ai#dev": {
+         "cache": false,
+         "persistent": true
+      }
    }
- }
- 
+}

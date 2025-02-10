@@ -1,7 +1,7 @@
 // apps/ai/src/services/ai/rag.ts
 import { OllamaService } from './ollama';
 import { QdrantService } from './qdrant';
-import { ModelConfig, DEFAULT_MODEL } from '../../config/models';
+import { ModelConfig, DEFAULT_MODEL } from '../../models/models';
 import { v4 as uuidv4 } from 'uuid';
 
 export class RAGService {
@@ -64,3 +64,6 @@ export class RAGService {
    }
  }
 }
+
+// exports singleton instance of RAGService
+export const ragService = new RAGService();
