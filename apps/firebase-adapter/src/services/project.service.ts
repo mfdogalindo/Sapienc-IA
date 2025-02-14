@@ -1,7 +1,5 @@
-import { FileMetadata, FileUpload, Project } from "../../models";
+import { FileMetadata, FileUpload, Project } from "../../../ai/src/models";
 import { FirebaseStorageService } from "./firebase-storage.service";
-import { FirebaseCoordinator } from "./firebase-coordinator";
-import { EventEmitter } from "stream";
 
 export class ProjectService {
    private firebaseSS : FirebaseStorageService;

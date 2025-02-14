@@ -1,3 +1,4 @@
+// apps/ai/src/controllers/AIController.ts
 import { OllamaService } from "../services/ai/ollama";
 import { RAGService } from "../services/ai/rag";
 import { Request, Response } from 'express';

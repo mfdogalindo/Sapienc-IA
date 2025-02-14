@@ -1,6 +1,7 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import 'dotenv/config';
+
+process.loadEnvFile();
 
 const firebaseAdminConfig = {
   projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,

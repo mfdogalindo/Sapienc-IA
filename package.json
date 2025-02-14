@@ -4,9 +4,10 @@
    "scripts": {
       "build": "turbo run build",
       "dev": "turbo run dev",
-      "dev:web": "turbo run dev --filter=web...",
+      "dev:web": "turbo run dev --filter=@sapienc-ia/remote-ui",
       "dev:desktop": "turbo run dev --filter=desktop...",
       "dev:ai": "turbo run dev --filter=@sapienc-ia/ai",
+      "dev:firebase": "turbo run dev --filter=@sapienc-ia/firebase-adapter",
       "infra:up": "turbo run dev --filter=@sapienc-ia/infra",
       "infra:down": "turbo run down --filter=@sapienc-ia/infra",
       "dev:full": "concurrently \"pnpm infra:up\" \"pnpm dev\"",

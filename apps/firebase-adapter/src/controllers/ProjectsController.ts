@@ -1,4 +1,6 @@
-import { ProjectService } from "../services/projects/project.service";
+// apps/ai/src/controllers/ProjectsController.ts
+import { FileUpload, FileRequest } from "../models";
+import { ProjectService } from "../services/project.service";
 import { Request, Response } from 'express';
 
 export class ProjectsController{
@@ -71,7 +73,7 @@ export class ProjectsController{
 
    public uploadFile = async (req: Request, res: Response) => {
       const { projectId } = req.params;
-      const file : FileUpload = req.file;
+      const file : FileUpload = (req as FileRequest).file;
 
       try {
          const fileMetadata = await this.projectService.uploadFile(projectId, file);

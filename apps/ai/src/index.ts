@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(router);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => {
    console.log(`RAG Service running on port ${PORT}`);
 });

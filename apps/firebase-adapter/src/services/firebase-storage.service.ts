@@ -1,6 +1,6 @@
 // apps/ai/src/services/firebase-storage.ts
-import { storage, db, auth } from '../../config/firebase-config';
-import { Project, FileMetadata, FileUpload } from '../../models';
+import { storage, db, auth } from '../config/firebase-config';
+import { Project, FileMetadata, FileUpload } from '../models';
 import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { ref as dbRef, set, get } from 'firebase/database';
 import { v4 as uuidv4 } from 'uuid';

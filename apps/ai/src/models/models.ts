@@ -1,4 +1,4 @@
-// packages/api/src/config/models.ts
+// apps/api/src/models/models.ts
 export interface ModelConfig {
    name: string;
    embedSize: number;

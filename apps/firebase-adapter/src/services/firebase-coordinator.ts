@@ -1,6 +1,6 @@
 import { signInWithCustomToken } from "firebase/auth";
-import { getFirebaseAdminAuth } from "../../config/firebase-admin.config";
-import { auth, db } from "../../config/firebase-config";
+import { getFirebaseAdminAuth } from "../config/firebase-admin.config";
+import { auth, db } from "../config/firebase-config";
 import { DatabaseReference, DataSnapshot, ref as dbRef, onValue, set } from "firebase/database";
 import { EventEmitter } from "events";
 
@@ -10,14 +10,14 @@ export class FirebaseCoordinator {
    private lastValues: Map<string, any> = new Map<string, any>();
 
    constructor() {
-      this.loginAndSubscribe();
+
    }
 
    async loginAndSubscribe() {
       const authAdmin = getFirebaseAdminAuth();
       const token = await authAdmin.createCustomToken('storage-user', { authorized: true });
       // Sign in with custom token
-      signInWithCustomToken(auth, token).then((userCredential) => {
+      await signInWithCustomToken(auth, token).then((userCredential) => {
          console.log('Signed in with custom token: ', userCredential.user.uid);
          this.dbRef = dbRef(db, 'coordinator');
          onValue(this.dbRef, (snapshot) => {
@@ -59,11 +59,14 @@ export class FirebaseCoordinator {
       }
    }
 
-   publish(data: any) {
+   publish(key: string, data: any) {
       if (this.dbRef) {
-         set(dbRef(db, "server"), data);
+         set(dbRef(db, key), data);
       }
    }
 
+   read(key: string): any {
+      return this.lastValues.get(key);
+   }
 
 }

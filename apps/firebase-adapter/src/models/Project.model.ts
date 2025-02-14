@@ -1,3 +1,4 @@
+// apps/ai/src/models/Project.model.ts
 export interface FileMetadata {
   id: string;
   name: string;
