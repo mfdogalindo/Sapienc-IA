@@ -12,5 +12,5 @@ body {
 }
 
 .app-container{
-  @apply ml-16 p-2 min-h-screen  bg-gradient-to-br from-gray-800 to-gray-950;
+  @apply ml-12 md:ml-16 p-2 min-h-screen bg-gradient-to-br from-gray-800 to-gray-950 text-white;
 }

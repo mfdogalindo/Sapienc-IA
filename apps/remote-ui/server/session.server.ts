@@ -1,5 +1,7 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import { getFirebaseAdminAuth } from "./firebase-admin.server";
+import { getFirebaseAdminAuth } from "./firebase/firebase-admin.server";
+import { auth } from "./firebase/firebase.server";
+import { signInWithCustomToken } from "firebase/auth";
 
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
@@ -44,7 +46,20 @@ export async function getUserSession(request: Request) {
 }
 
 export async function requireUser(request: Request) {
+  if(!auth.currentUser){
+    // destroy session cookie
+    const session = await storage.getSession(request.headers.get("Cookie"));
+    throw redirect("/", {
+      headers: {
+        "Set-Cookie": await storage.destroySession(session),
+      },
+    });
+  }
+
   const user = await getUserSession(request);
+
+  // check if firebase user is null
+
   if (!user) {
     throw redirect("/");
   }
@@ -53,6 +68,7 @@ export async function requireUser(request: Request) {
 
 export async function logout(request: Request) {
   const session = await storage.getSession(request.headers.get("Cookie"));
+  console.log("LOGOUT")
   return redirect("/", {
     headers: {
       "Set-Cookie": await storage.destroySession(session),

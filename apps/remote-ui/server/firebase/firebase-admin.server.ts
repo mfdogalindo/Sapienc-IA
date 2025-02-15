@@ -1,6 +1,6 @@
 
 import { getApps, initializeApp, cert } from "firebase-admin/app";
-import { appConfig } from "./config.server";
+import { appConfig } from "../config.server";
 import { getAuth } from 'firebase-admin/auth';
 
 

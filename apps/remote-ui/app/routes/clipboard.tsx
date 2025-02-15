@@ -2,8 +2,10 @@ import { useFetcher } from "@remix-run/react";
 import { useEffect, useRef, useState } from "react";
 import { publishText, getText  } from "server/database/clipboard-db.server";
 import { json } from "@remix-run/node";
+import { requireUser } from "server/session.server";
 
 export async function loader({ request }: { request: Request }) {
+  await requireUser(request);
    const initialContent = await getText();
    return json({ content: initialContent });
 }
@@ -13,7 +15,7 @@ export async function action({ request }: { request: Request }) {
    const text = formData.get("text") as string;
    await publishText(text);
    return json({ success: true });
-   }
+}
 
 
 export default function TextEditor() {
@@ -88,15 +90,15 @@ export default function TextEditor() {
   }
 
   return (
-    <div className="app-container rounded-lg shadow-xl p-6">
-      <h1 className="text-2xl font-bold mb-4 text-white">Live Text Clipboard</h1>
+    <div className="app-container shadow-xl p-6">
+      <h1 className="text-xl md:text-2xl font-bold mb-2 md:mb-4 text-white">Live Text Clipboard</h1>
 
       {/* Área de texto */}
       <div className="">
         <textarea
           value={content}
           onChange={handleChange}
-          className="text-black w-full h-[calc(100vh_-_5rem)] p-2 rounded-lg shadow-sm resize-none focus:outline-none bg-white bg-opacity-70"
+          className="text-sm text-black md:text-base w-full h-[calc(100vh_-_68px)] md:h-[calc(100vh_-_5rem)] p-2  shadow-sm resize-none focus:outline-none bg-white bg-opacity-70"
           placeholder="Escribe o pega tu texto aquí..."
           spellCheck="false"
         />

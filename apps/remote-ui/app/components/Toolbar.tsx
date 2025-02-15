@@ -32,7 +32,7 @@ export default function Toolbar() {
 
 
    return (
-   <div className="fixed top-0 bg-gradient-to-br from-teal-700 to-sky-800 w-16 h-screen flex flex-col items-center justify-between py-2">
+   <div className="fixed top-0 bg-gradient-to-br from-teal-800 to-sky-900 w-12 md:w-16 h-screen flex flex-col items-center justify-between py-2">
       <div>
          <ToolbarButton onClick={() => handleRoute("/todos")} label="To-Do" >
             <ListBulletIcon className="text-cyan-200"/>
@@ -40,7 +40,7 @@ export default function Toolbar() {
          <ToolbarButton onClick={() => handleRoute("/clipboard")} label="Clipboard" >
             <ClipboardDocumentIcon className="text-amber-100 "/>
          </ToolbarButton>
-         <ToolbarButton onClick={() => handleRoute("/ai")} label="AI" >
+         <ToolbarButton onClick={() => handleRoute("/projects")} label="Projects" >
             <SparklesIcon className="text-yellow-400"/>
          </ToolbarButton>
          <ToolbarButton onClick={() => handleRoute("/fileManager")} label="Files" className="" >

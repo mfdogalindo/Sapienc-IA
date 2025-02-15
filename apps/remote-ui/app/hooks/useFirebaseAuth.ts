@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword, 
   signOut as firebaseSignOut 
 } from "firebase/auth";
-import { auth } from "../../server/firebase.server";
+import { auth } from "../../server/firebase/firebase.server";
 
 export function useFirebaseAuth() {
   const [user, setUser] = useState<User | null>(null);

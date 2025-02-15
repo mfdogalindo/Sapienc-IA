@@ -1,4 +1,4 @@
-import { auth } from "server/firebase.server";
+import { auth } from "server/firebase/firebase.server";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createUserSession, getUserSession } from "server/session.server";
 

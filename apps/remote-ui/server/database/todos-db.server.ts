@@ -1,4 +1,4 @@
-import { database } from '../firebase.server';
+import { database } from '../firebase/firebase.server';
 import { ref, set, push, remove, get, update } from 'firebase/database';
 
 export async function addTodo(userId: string, text: string) {
