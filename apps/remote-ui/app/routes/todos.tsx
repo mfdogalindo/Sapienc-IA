@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation, useFetcher } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { requireUser } from "server/session.server";
-import { addTodo, deleteTodo, getTodos, toggleTodo } from "server/todos-db.server";
+import { addTodo, deleteTodo, getTodos, toggleTodo } from "server/database/todos-db.server";
 
 // Tipos
 type Todo = {
