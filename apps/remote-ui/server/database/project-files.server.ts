@@ -94,8 +94,6 @@ export async function uploadProjectFile(
     const newList = existingFiles.concat(fileMetadata);
     project.files = newList;
 
-    console.log('Updating project files:', project);
-
     await update(projectRef, project);
 
     return fileMetadata;
@@ -110,16 +108,27 @@ export async function uploadProjectFile(
   }
 }
 
-export async function getFileContent(projectId: string, fileId: string): Promise<string> {
-  const fileRef = dbRef(database, `projects/${projectId}/files/${fileId}`);
-  const snapshot = await get(fileRef);
+export async function getFileMetadata(projectId: string, fileId: string): Promise<FileMetadata> {
+  const filesRef = dbRef(database, `projects/${projectId}/files`);
+  const snapshot = await get(filesRef);
   
   if (!snapshot.exists()) {
     throw new Error('File not found');
   }
 
-  const fileMetadata = snapshot.val() as FileMetadata;
-  const response = await fetch(fileMetadata.url);
+  const files = snapshot.val() as FileMetadata[];
+  const file = files.find(file => file.id === fileId);
+
+  if (!file) {
+    throw new Error('File not found');
+  }
+
+  return file;
+}
+
+export async function getFileContent(projectId: string, fileId: string): Promise<string> {
+  const file = await getFileMetadata(projectId, fileId);
+  const response = await fetch(file.url);
   const content = await response.text();
   return content;
 }

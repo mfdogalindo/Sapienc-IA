@@ -19,7 +19,7 @@ export async function loader({ request }: { request: Request }) {
    return json(projects);
 }
 
-export async function action({ request }: { request: Request }) { 
+export async function action({ request }: { request: Request }) {
    const formData = await request.formData();
    const action = formData.get("_action");
 
@@ -78,7 +78,7 @@ export default function ProjectPage() {
             setSelectedProject(null);
          }
       }
-      if(navigation.state === "idle"){
+      if (navigation.state === "idle") {
          setIsLoading(false);
       }
    }, [fetcher.data, selectedProject, setSelectedProject]);
@@ -124,7 +124,7 @@ export default function ProjectPage() {
                      onClick={() => setSelectedProject(project)}
                   >
                      <div className="flex items-center gap-2">
-                     <h2 className="text-lg font-bold text-white">{project.name}</h2>
+                        <h2 className="text-lg font-bold text-white">{project.name}</h2>
                         <button
                            onClick={() => handleEditProject(project)}
                            className="text-teal-400 hover:text-teal-300 transition-colors"
@@ -141,8 +141,10 @@ export default function ProjectPage() {
                         Created: {new Date(project.createdAt).toLocaleString("es-CO", { timeZone: localTimeZone })}{" "}
                      </p>
                      <p className="md:col-span-2 text-white italic font-serif text-zinc-400">{project.description}</p>
-                     <p>Objetive: <span className="italic">{project.objective}</span></p>
-                     <ProjectFiles className="md:col-span-2" files={project.files} />
+                     <p>
+                        Objetive: <span className="italic">{project.objective}</span>
+                     </p>
+                     <ProjectFiles className="md:col-span-2" files={project.files} projectId={project.id} />
                   </div>
                );
             })}

@@ -4,7 +4,8 @@ import {
   uploadProjectFile, 
   deleteProjectFile, 
   getProjectFiles, 
-  getFileContent
+  getFileContent,
+  getFileMetadata
 } from "../../server/database/project-files.server";
 import FileManager from "~/components/projects/FileManager";
 
@@ -17,9 +18,10 @@ export async function loader({ request }: { request: Request }) {
   // Handle file preview request
   if (projectId && fileId && url.pathname.includes('/preview')) {
     try {
-      const content = await getFileContent(projectId, fileId);
+      const content = await getFileMetadata(projectId, fileId);
       return json({ content });
     } catch (error) {
+      console.error('Error fetching file content', error);
       return json({ error: error.message }, { status: 400 });
     }
   }

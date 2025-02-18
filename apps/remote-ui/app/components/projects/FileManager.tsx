@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useFetcher } from '@remix-run/react';
+import { useFetcher, useLoaderData, useSearchParams } from '@remix-run/react';
 import { useProject } from '~/context/ProjectContext';
 import { FileMetadata } from 'server/models';
 import { 
@@ -28,13 +28,26 @@ const FileManager = () => {
   const [files, setFiles] = useState<FileMetadata[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileMetadata | null>(null);
+  const loaderData = useLoaderData();
+  const [searchParams] = useSearchParams();
 
-  // Load initial files
+
   useEffect(() => {
+    // Check URL parameters for file preview
+    const fileId = searchParams.get('fileId');
+    const projectId = searchParams.get('projectId');
+    
+    if (fileId && projectId && loaderData?.content) {
+      console.log('Previewing file', loaderData.content);
+      setSelectedFile(loaderData.content);
+      return;
+    }
+
     if (selectedProject) {
       fetcher.load(`/fileManager?projectId=${selectedProject.id}`);
     }
-  }, [selectedProject]);
+
+  }, [searchParams, loaderData, selectedProject]);
 
   // Handle fetcher state updates
   useEffect(() => {

@@ -2,9 +2,9 @@ import {
    XMarkIcon,
    ListBulletIcon,
    ClipboardDocumentIcon,
-   SparklesIcon,
+   RectangleGroupIcon,
    ServerStackIcon,
-} from "@heroicons/react/16/solid";
+} from "@heroicons/react/24/solid";
 import { ToolbarButton } from "./ui/ToolbarButton";
 import { useEffect, useState } from "react";
 import { useProject } from "~/context/ProjectContext";
@@ -60,19 +60,19 @@ export default function Toolbar() {
          <div className="fixed top-8 md:top-10 bg-teal-400 bg-opacity-20 w-12 h-[calc(100vh-28px)] md:w-16 md:h-[calc(100vh-36px)] flex flex-col items-center justify-between py-2">
             <div>
                <ToolbarButton navigatePath="/projects" label="Projects">
-                  <SparklesIcon className="text-yellow-400" />
+                  <RectangleGroupIcon className="text-emerald-100" />
                </ToolbarButton>
                <ToolbarButton navigatePath="/clipboard" label="Clipboard">
-                  <ClipboardDocumentIcon className="text-amber-100" />
+                  <ClipboardDocumentIcon className="text-emerald-100" />
                </ToolbarButton>
                {selectedProject && (
                   <>
                      <ToolbarButton navigatePath="/todos" label="To-Do">
-                        <ListBulletIcon className="text-cyan-200" />
+                        <ListBulletIcon className="text-emerald-100" />
                      </ToolbarButton>
 
                      <ToolbarButton navigatePath="/fileManager" label="Files">
-                        <ServerStackIcon className="text-emerald-400" />
+                        <ServerStackIcon className="text-emerald-100" />
                      </ToolbarButton>
                   </>
                )}
