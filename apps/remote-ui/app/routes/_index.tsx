@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export async function loader({ request }) {
   const user = await getUserSession(request);
-  if (user) return redirect("/todos");
+  if (user) return redirect("/projects");
   return null;
 }
 
@@ -34,7 +34,7 @@ export default function Index() {
 
       if (response.ok) {
         // Si la autenticación es exitosa, redirige al usuario
-        window.location.href = "/todos";
+        window.location.href = "/projects";
       } else {
         const data = await response.json();
         setError(data.error || "Error en la autenticación");
@@ -46,9 +46,9 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black to-sky-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8 bg-white p-8  shadow-2xl">
+      <div className="max-w-md w-full space-y-8 bg-white bg-opacity-30 p-8  shadow-2xl">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-100">
             Sign in to your account
           </h2>
         </div>

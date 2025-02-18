@@ -26,7 +26,7 @@ export async function action({ request }) {
    try {
      const userCredential = await signInWithEmailAndPassword(auth, email, password);
      const idToken = await userCredential.user.getIdToken();
-     return createUserSession(idToken, "/todos");
+     return createUserSession(idToken, "/projects");
    } catch (error) {
      return new Response("Invalid login credentials", { status: 400 });
    }

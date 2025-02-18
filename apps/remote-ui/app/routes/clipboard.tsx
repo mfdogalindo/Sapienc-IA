@@ -98,7 +98,7 @@ export default function TextEditor() {
         <textarea
           value={content}
           onChange={handleChange}
-          className="text-sm text-black md:text-base w-full h-[calc(100vh_-_68px)] md:h-[calc(100vh_-_5rem)] p-2  shadow-sm resize-none focus:outline-none bg-white bg-opacity-70"
+          className="text-sm text-black md:text-base w-full h-[calc(100vh_-_100px)] md:h-[calc(100vh_-_130px)] p-2  shadow-sm resize-none focus:outline-none bg-white bg-opacity-70"
           placeholder="Escribe o pega tu texto aquí..."
           spellCheck="false"
         />

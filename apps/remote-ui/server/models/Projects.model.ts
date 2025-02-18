@@ -25,9 +25,12 @@ export interface FileMetadata {
    id: string;
    name: string;
    description: string;
+   objective: string;
    chats: Chat[];
    files: FileMetadata[];
    createdAt: number;
    updatedAt: number;
  }
  
+
+export type ProjectCreate = Partial<Pick<Project, 'name' | 'description' | 'objective'>>;
