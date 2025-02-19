@@ -38,7 +38,6 @@ const FileManager = () => {
     const projectId = searchParams.get('projectId');
     
     if (fileId && projectId && loaderData?.content) {
-      console.log('Previewing file', loaderData.content);
       setSelectedFile(loaderData.content);
       return;
     }
