@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useFetcher, useLoaderData, useSearchParams } from '@remix-run/react';
 import { useProject } from '~/context/ProjectContext';
-import { FileMetadata } from 'server/models';
+import { FileMetadata, FileWithMetadata } from 'server/models';
 import { 
   DocumentTextIcon,
   TrashIcon,
@@ -19,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
 import FilePreview from './FilePreview';
-import { set } from 'firebase/database';
+import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
 
 const FileManager = () => {
   const { selectedProject, setIsLoading } = useProject();
@@ -28,18 +28,19 @@ const FileManager = () => {
   const [files, setFiles] = useState<FileMetadata[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileMetadata | null>(null);
-  const loaderData = useLoaderData();
+  const loaderData = useLoaderData<FileWithMetadata>();
   const [searchParams] = useSearchParams();
 
 
   useEffect(() => {
-    // Check URL parameters for file preview
     const fileId = searchParams.get('fileId');
     const projectId = searchParams.get('projectId');
+    const currentPath = window.location.pathname;
     
-    if (fileId && projectId && loaderData?.content) {
-      setSelectedFile(loaderData.content);
-      return;
+    if (fileId && projectId && loaderData?.id === fileId && currentPath.includes('/preview')) {
+      setSelectedFile(loaderData);
+      // clear search params
+      window.history.replaceState({}, '', '/fileManager');
     }
 
     if (selectedProject) {

@@ -6,7 +6,7 @@ import {
   getProjectFiles, 
   getFileContent,
   getFileMetadata
-} from "../../server/database/project-files.server";
+} from "../../server/database/project-files-firestore.server";
 import FileManager from "~/components/projects/FileManager";
 
 export async function loader({ request }: { request: Request }) {
@@ -18,8 +18,8 @@ export async function loader({ request }: { request: Request }) {
   // Handle file preview request
   if (projectId && fileId && url.pathname.includes('/preview')) {
     try {
-      const content = await getFileMetadata(projectId, fileId);
-      return json({ content });
+      const data= await getFileMetadata(projectId, fileId);
+      return data;
     } catch (error) {
       console.error('Error fetching file content', error);
       return json({ error: error.message }, { status: 400 });

@@ -11,7 +11,13 @@ export async function getProjects(): Promise<Project[]> {
    else {
       const projects = snapshot.val();
       return Object.keys(projects).map((key) => {
-         return { id: key, ...projects[key] };
+         const toReturn = { id: key, ...projects[key] };
+         toReturn.files = Object.values(toReturn.files || {}
+         ).filter((file) => file !== null && file !== undefined).map((file) => {
+            return file;
+         }
+         );
+         return toReturn;
       });
    }
 }
@@ -26,9 +32,9 @@ export async function deleteProject(projectId: string) {
          return;
       }
 
-      const project : Project = projectDs.val();
+      const project: Project = projectDs.val();
 
-      if(project.files) {
+      if (project.files) {
          const files = Object.values(project.files);
          for (const file of files) {
             const fileRef = storageRef(storage, file.url);
@@ -36,7 +42,7 @@ export async function deleteProject(projectId: string) {
          }
       }
 
-   }catch(e){
+   } catch (e) {
       console.error(e);
    }
 
@@ -55,13 +61,13 @@ export async function createProject(data: ProjectCreate): Promise<Project> {
 export async function updateProject(projectId: string, data: ProjectCreate) {
    const projectRef = ref(database, `projects/${projectId}`);
    const updates = {
-     name: data.name,
-     description: data.description,
-     objective: data.objective,
-     updatedAt: Date.now()
+      name: data.name,
+      description: data.description,
+      objective: data.objective,
+      updatedAt: Date.now()
    };
 
    console.log(updates);
-   
+
    await update(projectRef, updates);
- }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/16/solid';
 import { FileMetadata } from 'server/models';
 import { useFetcher } from '@remix-run/react';
+import { FileWithMetadata } from 'server/models';
 
 interface FilePreviewProps {
   file: FileMetadata;
@@ -12,7 +13,7 @@ interface FilePreviewProps {
 const FilePreview = ({ file, projectId, onClose }: FilePreviewProps) => {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<{file: FileWithMetadata}>();
 
   useEffect(() => {
     if (file) {
@@ -23,7 +24,7 @@ const FilePreview = ({ file, projectId, onClose }: FilePreviewProps) => {
 
   useEffect(() => {
     if (fetcher.data) {
-      setContent(fetcher.data.content);
+      setContent(fetcher.data.file.data);
       setIsLoading(false);
     }
   }, [fetcher.data]);
