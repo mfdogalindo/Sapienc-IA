@@ -3,11 +3,11 @@ import { requireUser } from "server/session.server";
 import { 
   uploadProjectFile, 
   deleteProjectFile, 
-  getProjectFiles, 
-  getFileContent,
-  getFileMetadata
+  getProjectFiles,
+  getFileMetadata,
+  updateFile
 } from "../../server/database/project-files-firestore.server";
-import FileManager from "~/components/projects/FileManager";
+import FileManager from "~/components/files/FileManager";
 
 export async function loader({ request }: { request: Request }) {
   await requireUser(request);
@@ -56,12 +56,29 @@ export async function action({ request }: { request: Request }) {
  
    if (actionType === "delete") {
      const fileId = formData.get("fileId") as string;
+
+     console.log("Deleting file: ", fileId, " from project: ", projectId);
+
      try {
        await deleteProjectFile(projectId, fileId);
        return json({ success: true, deletedFileId: fileId });
      } catch (error) {
        return json({ error: (error as Error).message }, { status: 400 });
      }
+   }
+
+   if (actionType === "update") {
+    const fileId = formData.get("fileId") as string;
+    const file = formData.get("file") as File;
+
+    try {
+      // Pass the buffer (or convert it as needed) to your upload function
+      const fileMetadata = await updateFile(projectId, fileId, file);
+      return json({ success: true, file: fileMetadata });
+    } catch (error) {
+      console.error("Error uploading file", error);
+      return json({ error: (error as Error).message }, { status: 400 });
+    }
    }
  
    return json({ error: "Invalid action" }, { status: 400 });

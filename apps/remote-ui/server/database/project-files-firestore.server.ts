@@ -1,23 +1,42 @@
 //import { storage } from '../firebase/firebase.server';
 //import { ref, uploadBytes, deleteObject, getDownloadURL } from 'firebase/storage';
 import { database } from '../firebase/firebase.server';
-import { collection, addDoc, deleteDoc, doc, query, getDoc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase.server';
 import { ref as dbRef, update, get } from 'firebase/database';
-import { FileMetadata, FileWithMeta, FileWithMetadata } from '../models';
+import { FileMetadata, FileWithMetadata } from '../models';
 
-const convertToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    file.arrayBuffer().then((buffer) => {
-      const base64 = btoa(
-        new Uint8Array(buffer).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ''
-        )
-      );
-      resolve(base64);
-    });
-  });
+const convertToBase64 = async (file: File): Promise<string> => {
+  const buffer = await file.arrayBuffer();
+  const decoder = new TextDecoder('utf-8');
+  const text = decoder.decode(buffer);
+  // Usamos un TextEncoder para asegurar que los caracteres especiales se manejen correctamente
+  const encoder = new TextEncoder();
+  const utf8Bytes = encoder.encode(text);
+
+  // Convertimos los bytes UTF-8 a base64
+  let binary = '';
+  const bytes = new Uint8Array(utf8Bytes);
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+};
+
+
+const base64ToText = (base64: string): string => {
+  try {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const decoder = new TextDecoder('utf-8');
+    return decoder.decode(bytes);
+  } catch (e) {
+    console.error('Error decodificando base64:', e);
+    throw new Error('Error decodificando el contenido del archivo');
+  }
 };
 
 // Allowed file types and their extensions
@@ -34,14 +53,10 @@ export const ALLOWED_FILE_TYPES = {
 // Maximum file size (1MB)
 export const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
-export async function uploadProjectFile(
-  projectId: string,
-  uploadedFile: File
-): Promise<FileMetadata> {
+function validateFile(uploadedFile: File): { fileName: string, fileType: string } {
   // Get the file name from the File object if available
   const fileName = (uploadedFile instanceof File) ? uploadedFile.name : 'uploaded-file';
   const fileExtension = '.' + fileName.split('.').pop()?.toLowerCase();
-
   // Determine the file type
   let fileType = (uploadedFile instanceof File) ? uploadedFile.type : '';
 
@@ -77,6 +92,53 @@ export async function uploadProjectFile(
     throw new Error(`File size exceeds limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`);
   }
 
+  return { fileName, fileType };
+}
+
+export async function updateFile(projectId: string, fileId: string, uploadedFile: File): Promise<FileMetadata> {
+  const { fileName, fileType } = validateFile(uploadedFile);
+
+  try {
+    const base64Data = await convertToBase64(uploadedFile);
+
+    // Compute file size  and update the file in the database
+    const estimatedSize = (4 * Math.ceil(base64Data.length / 3)) & ~3;
+    if (estimatedSize > MAX_FILE_SIZE) {
+      throw new Error(`File size exceeds limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`);
+    }
+
+    const updatedFile = {
+      name: fileName,
+      type: fileType,
+      size: estimatedSize,
+      data: base64Data,
+      timestamp: Date.now()
+    };
+
+    await updateDoc(doc(firestore, `projects/${projectId}/files/${fileId}`), updatedFile);
+
+    // Update file metadata in the database
+    const fileRef = dbRef(database, `projects/${projectId}/files/${fileId}`);
+    const snapshot = await get(fileRef);
+    const fileMetadata = snapshot.val() as FileMetadata;
+
+    fileMetadata.size = estimatedSize;
+
+    await update(fileRef, fileMetadata);
+    return fileMetadata;
+  } catch (error) {
+    throw new Error(`Error updating file: ${error.message}`);
+  }
+}
+
+
+export async function uploadProjectFile(
+  projectId: string,
+  uploadedFile: File
+): Promise<FileMetadata> {
+
+  const { fileName, fileType } = validateFile(uploadedFile);
+
   try {
 
     const base64Data = await convertToBase64(uploadedFile);
@@ -101,13 +163,20 @@ export async function uploadProjectFile(
 
     // Update project's files in the database
     const projectRef = dbRef(database, `projects/${projectId}`);
-
-    // Get list of existing files
     const snapshot = await get(projectRef);
-    const project = snapshot.exists() ? snapshot.val() : {};
-    const existingFiles = project.files ? Object.values(project.files) : [];
-    const newList = existingFiles.concat(fileMetadata);
-    project.files = newList;
+
+    if (!snapshot.exists()) {
+      throw new Error('Project not found');
+    }
+
+    const project = snapshot.val();
+    const fileId = docStored.id;
+    if (!project.files) {
+      project.files = {};
+    }
+
+    project.files[fileId] = fileMetadata;
+
 
     await update(projectRef, project);
 
@@ -118,15 +187,14 @@ export async function uploadProjectFile(
 }
 
 export async function getFileMetadata(projectId: string, fileId: string): Promise<FileMetadata> {
-  const filesRef = dbRef(database, `projects/${projectId}/files`);
-  const snapshot = await get(filesRef);
+  const fileRef = dbRef(database, `projects/${projectId}/files/${fileId}`);
+  const snapshot = await get(fileRef);
 
   if (!snapshot.exists()) {
     throw new Error('File not found');
   }
 
-  const files = snapshot.val() as FileMetadata[];
-  const file = files.find(file => file?.id === fileId);
+  const file = snapshot.val() as FileMetadata;
 
   if (!file) {
     throw new Error('File not found');
@@ -143,9 +211,9 @@ export async function getFileContent(projectId: string, fileId: string): Promise
   }
 
   const fileDataB64 = fileDoc.data();
-  const fileData = atob(fileDataB64.data);
+  const fileData = base64ToText(fileDataB64.data);
   return fileData;
-  
+
 }
 
 export async function getFileWithMetadata(projectId: string, fileId: string): Promise<FileWithMetadata> {
@@ -157,35 +225,44 @@ export async function getFileWithMetadata(projectId: string, fileId: string): Pr
   }
 
   const fileDataB64 = fileDoc.data();
-  const fileData = atob(fileDataB64.data);
+  const fileData = base64ToText(fileDataB64.data);
   return { ...file, data: fileData };
 }
 
 export async function deleteProjectFile(projectId: string, fileId: string): Promise<void> {
   // Get file metadata from the database
-  const filesRef = dbRef(database, `projects/${projectId}/files`);
+  const filesRef = dbRef(database, `projects/${projectId}/files/${fileId}`);
   const snapshot = await get(filesRef);
 
   if (!snapshot.exists()) {
     throw new Error('Files not found');
   }
 
-  const fileMetadata = snapshot.val() as FileMetadata[];
-  const fileToDelete = fileMetadata.find(file => file?.id === fileId);
+  const fileToDelete = snapshot.val() as FileMetadata;
 
   if (!fileToDelete) {
     throw new Error('File not found');
   }
 
+  console.log('Deleting file:', fileToDelete);
+
   // Delete the file from firestore
-  await deleteDoc(doc(firestore, `projects/${projectId}/files/${
-    fileId
-  }`));
+  await deleteDoc(doc(firestore, `projects/${projectId}/files/${fileId}`));
+
+  console.log('File deleted from firestore');
 
   // Remove file metadata from the database
-  await update(dbRef(database, `projects/${projectId}`), {
-    files: fileMetadata.filter(file => file?.id !== fileId)
-  });
+  const projectRef = dbRef(database, `projects/${projectId}`);
+  const projectSnapshot = await get(projectRef);
+
+  if (!projectSnapshot.exists()) {
+    throw new Error('Project not found');
+  }
+
+  const project = projectSnapshot.val();
+  delete project.files[fileId];
+
+  await update(projectRef, project);
 }
 
 export async function getProjectFiles(projectId: string): Promise<FileMetadata[]> {

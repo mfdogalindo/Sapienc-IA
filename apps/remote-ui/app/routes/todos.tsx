@@ -2,7 +2,7 @@
 import { json } from "@remix-run/node";
 import { requireUser } from "server/session.server";
 import { addTodo, deleteTodo, getTodos, toggleTodo } from "server/database/todos-db.server";
-import TodosComponent from "~/components/ToDos/todos";
+import TodosComponent from "~/components/todos/todos";
 
 export async function loader({ request }: { request: Request }) {
   const user = await requireUser(request);

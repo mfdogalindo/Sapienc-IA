@@ -1,0 +1,61 @@
+// themes/nord.ts
+import { editor } from 'monaco-editor';
+
+export const nordTheme: editor.IStandaloneThemeData = {
+  base: 'vs-dark', // 'vs' | 'vs-dark' | 'hc-black' | 'hc-light'
+  inherit: true,
+  rules: [
+    { token: '', foreground: 'D8DEE9' },
+    { token: 'keyword', foreground: '81A1C1' },
+    { token: 'keyword.control', foreground: '81A1C1' },
+    { token: 'keyword.operator', foreground: '81A1C1' },
+    { token: 'keyword.other.unit', foreground: 'B48EAD' },
+    { token: 'comment', foreground: '4C566A' },
+    { token: 'number', foreground: 'B48EAD' },
+    { token: 'string', foreground: 'A3BE8C' },
+    { token: 'type', foreground: '8FBCBB' },
+    { token: 'variable', foreground: 'D8DEE9' },
+    { token: 'variable.parameter', foreground: '88C0D0' },
+    { token: 'variable.other.constant', foreground: 'ECEFF4' },
+    { token: 'constant', foreground: '88C0D0' },
+    { token: 'function', foreground: '88C0D0' },
+    { token: 'function.declaration', foreground: '88C0D0' },
+    { token: 'entity.name.function', foreground: '88C0D0' },
+    { token: 'entity.name.type', foreground: '8FBCBB' },
+    { token: 'entity.name.tag', foreground: '81A1C1' },
+    { token: 'entity.other.attribute-name', foreground: '8FBCBB' },
+    { token: 'punctuation', foreground: 'ECEFF4' },
+    { token: 'punctuation.definition', foreground: 'ECEFF4' },
+    { token: 'markup.heading', foreground: '88C0D0', fontStyle: 'bold' },
+    { token: 'markup.italic', fontStyle: 'italic' },
+    { token: 'markup.bold', fontStyle: 'bold' },
+    { token: 'markup.link', foreground: '88C0D0' }
+  ],
+  colors: {
+    'editor.background': '#1E2530',
+    'editor.foreground': '#D8DEE9',
+    'editor.lineHighlightBackground': '#3B4252',
+    'editor.selectionBackground': '#434C5E',
+    'editor.inactiveSelectionBackground': '#434C5E',
+    'editorCursor.foreground': '#D8DEE9',
+    'editorWhitespace.foreground': '#4C566A',
+    'editorLineNumber.foreground': '#4C566A',
+    'editorLineNumber.activeForeground': '#D8DEE9',
+    'editor.selectionHighlightBackground': '#434C5E',
+    'editor.wordHighlightBackground': '#434C5E',
+    'editor.wordHighlightStrongBackground': '#434C5E',
+    'editor.findMatchBackground': '#88C0D0',
+    'editor.findMatchHighlightBackground': '#81A1C1',
+    'editorBracketMatch.background': '#2E3440',
+    'editorBracketMatch.border': '#81A1C1',
+    'editorGutter.background': '#2E3440',
+    'editorWidget.background': '#2E3440',
+    'editorHoverWidget.background': '#2E3440',
+    'editorSuggestWidget.background': '#2E3440',
+    'editorSuggestWidget.border': '#3B4252',
+    'editorSuggestWidget.selectedBackground': '#434C5E',
+    'list.activeSelectionBackground': '#434C5E',
+    'list.hoverBackground': '#3B4252',
+    'scrollbar.shadow': '#00000000'
+  }
+};

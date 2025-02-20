@@ -2,16 +2,8 @@ import { DocumentTextIcon } from "@heroicons/react/16/solid";
 import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { FileMetadata } from "server/models";
+import { formatFileSize } from "~/lib/formatters";
 
-const formatFileSize = (bytes: number) => {
-   if (bytes < 1024) {
-      return bytes + " bytes";
-   }
-   if (bytes < 1024 * 1024) {
-      return (bytes / 1024).toFixed(2) + " KB";
-   }
-   return (bytes / 1024 / 1024).toFixed(2) + " MB";
-};
 
 export function ProjectFiles({ files, className, projectId }: { files: FileMetadata[]; className: string, projectId: string }) {
    const [showList, setShowList] = useState(false);
